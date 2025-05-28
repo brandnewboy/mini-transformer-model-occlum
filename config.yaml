@@ -1,0 +1,36 @@
+includes:
+  - base.yaml
+targets:
+  - target: /usr/bin
+    createlinks:
+      - src: /opt/python-occlum/bin/python3
+        linkname: python3
+  # python packages
+  - target: /opt
+    copy: 
+      - dirs:
+          - ../python-occlum
+
+  # below are python code and data
+  - target: /data
+    copy:
+      - dirs:
+          - ../data
+  # below are python code and data (replace demo.py with your actual script)
+  - target: /bin
+    copy:
+      - files: 
+        - ../demo.py
+        - ../main.py
+
+  - target: /bin
+    copy:
+      - dirs: 
+        - ../src
+
+  # Optional: Uncomment and add your cert/key files if needed
+  # - target: /etc
+  #   copy:
+  #     - files:
+  #       - ../your_cert.crt
+  #       - ../your_key.key

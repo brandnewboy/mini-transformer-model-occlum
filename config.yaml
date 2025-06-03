@@ -1,7 +1,7 @@
 includes:
   - base.yaml
 targets:
-  - target: /usr/bin
+  - target: /bin
     createlinks:
       - src: /opt/python-occlum/bin/python3
         linkname: python3
@@ -17,13 +17,14 @@ targets:
       - dirs:
           - ../data
   # below are python code and data (replace demo.py with your actual script)
-  - target: /bin
+  - target: /
     copy:
       - files: 
         - ../demo.py
         - ../main.py
+        - ../hello.py
 
-  - target: /bin
+  - target: /
     copy:
       - dirs: 
         - ../src

@@ -5,7 +5,32 @@ import tiktoken
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from tiktoken.load import load_tiktoken_bpe
+from tiktoken_ext.openai_public import cl100k_base
 
+public_path = '/data/data'
+def custom_cl100k_base(enc_path):
+    """
+    从本地路径加载编码文件并返回一个自定义的 Encoding 实例。
+
+    :param enc_path: 本地编码文件的路径
+    :return: 修改后的 tiktoken.Encoding 实例
+    """
+    # 从本地路径加载 mergeable_ranks
+    mergeable_ranks = load_tiktoken_bpe(enc_path)
+
+    # 获取原始的 cl100k_base 编码实例
+    original_encoding = cl100k_base()
+
+    # 创建一个新的 Encoding 实例，并替换 mergeable_ranks
+    modified_encoding = tiktoken.Encoding(
+        name=original_encoding['name'],
+        mergeable_ranks=mergeable_ranks,
+        special_tokens=original_encoding['special_tokens'],
+        pat_str=original_encoding['pat_str'],
+    )
+
+    return modified_encoding
 
 # Hyperparameters
 batch_size = 4
@@ -33,16 +58,20 @@ torch.manual_seed(TORCH_SEED)
 #         text = f.read()
 
 # Load the training data
-if not os.path.exists("/data/sales_textbook.txt"):
+if not os.path.exists(public_path + "/sales_textbook.txt"):
     data_url = "https://huggingface.co/datasets/goendalf666/sales-textbook_for_convincing_and_selling/raw/main/sales_textbook.txt"
-    with open("/data/sales_textbook.txt", "wb") as f:
+    with open(public_path + "/sales_textbook.txt", "wb") as f:
         f.write(requests.get(data_url).content)
 
-with open("/data/sales_textbook.txt", "r") as f:
+with open(public_path + "/sales_textbook.txt", "r") as f:
         text = f.read()
 
-# tokenize the text
-enc = tiktoken.get_encoding('cl100k_base')
+enc_path = public_path + "/cl100k_base.tiktoken"  # 替换为实际的本地路径
+
+# 使用自定义的 cl100k_base 函数加载本地编码配置
+enc = custom_cl100k_base(enc_path)
+# enc = tiktoken.get_encoding('cl100k_base')
+
 tokenized_text = enc.encode(text)
 max_token_value = max(tokenized_text)
 
@@ -274,6 +303,9 @@ def save_model(model):
 def load_model(model):
     # Load token embedding weights
     model.token_embedding_table.load_state_dict(torch.load("data/token_embedding.pth"))
+    '''
+    { key: value }
+    '''
     
     # Load transformer block weights
     for i, block in enumerate(model.transformer_blocks):
@@ -300,18 +332,27 @@ def trainModelForExport(_model):
     train(_model)
 
 if __name__ == "__main__":
-    model = Model()
-    model.to(device)
-    train(model)
-    
-    # Save the model using the new strategy
-    save_model(model)
-    
-    # Create a new model instance and load weights
-    new_model = Model()
-    new_model.to(device)
-    new_model = load_model(new_model)
-    
-    # Evaluate the loaded model
-    evaluate_model(new_model)
+    # model = Model()
+    # model.to(device)
+    # train(model)
+    #
+    # # Save the model using the new strategy
+    # save_model(model)
+    #
+    # # Create a new model instance and load weights
+    # new_model = Model()
+    # new_model.to(device)
+    # new_model = load_model(new_model)
+    #
+    # # Evaluate the loaded model
+    # evaluate_model(new_model)
     # evaluate_model(model)
+    text = "your text here"
+    enc_path = "tiktoken_cache/cl100k_base.tiktoken"  # 替换为实际的本地路径
+
+    # 使用自定义的 cl100k_base 函数加载本地编码配置
+    encoding = custom_cl100k_base(enc_path)
+
+    tokens = encoding.encode(text)
+
+    print(tokens)

@@ -1,8 +1,8 @@
 import torch
-from src.model import Model, enc  # 从model.py导入Model类和token编码器
+from src.model import Model, enc, public_path  # 从model.py导入Model类和token编码器
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
+public_path = '/data/data'
 def load_full_model(model_path):
     """加载完整模型权重"""
     model = Model().to(device)
@@ -13,12 +13,12 @@ def load_split_model():
     """加载分块层权重"""
     model = Model().to(device)
     # 加载词嵌入层
-    model.token_embedding_table.load_state_dict(torch.load("/data/token_embedding.pth", map_location=device))
+    model.token_embedding_table.load_state_dict(torch.load(public_path + "/token_embedding.pth", map_location=device))
     # 加载Transformer块
     for i, block in enumerate(model.transformer_blocks):
-        block.load_state_dict(torch.load(f"/data/transformer_block_{i}.pth", map_location=device))
+        block.load_state_dict(torch.load(public_path + "/transformer_block_{i}.pth", map_location=device))
     # 加载最终线性层
-    model.final_linear_layer.load_state_dict(torch.load("/data/final_linear.pth", map_location=device))
+    model.final_linear_layer.load_state_dict(torch.load(public_path + "/final_linear.pth", map_location=device))
     return model
 
 def evaluate_model(model, start='The'):
@@ -33,7 +33,7 @@ def evaluate_model(model, start='The'):
 
 if __name__ == "__main__":
     # 选择加载模式：0为完整权重，1为分块权重
-    model01 = load_full_model("/data/model.pth")
+    model01 = load_full_model(public_path + "/model.pth")
     model02 = load_split_model()
     
     evaluate_model(model01)

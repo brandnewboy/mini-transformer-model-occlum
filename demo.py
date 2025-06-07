@@ -1,7 +1,7 @@
 from transformers import AutoModel, AutoTokenizer
 
 
-local_path = "/home/ystf/model_finger/model/huggingface/hub/models--THUDM--chatglm-6b"  # 本地模型路径
+local_path = "/home/examples/model/huggingface/hub/models--THUDM--chatglm-6b"  # 本地模型路径
 # 加载分词器
 # tokenizer = AutoTokenizer.from_pretrained(local_path, trust_remote_code=True, use_fast=False)
 # 加载模型

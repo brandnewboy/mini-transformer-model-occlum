@@ -7,7 +7,7 @@ targets:
         linkname: python3
   # python packages
   - target: /opt
-    copy: 
+    copy:
       - dirs:
           - ../python-occlum
 
@@ -19,14 +19,14 @@ targets:
   # below are python code and data (replace demo.py with your actual script)
   - target: /
     copy:
-      - files: 
+      - files:
         - ../demo.py
         - ../main.py
         - ../hello.py
 
   - target: /
     copy:
-      - dirs: 
+      - dirs:
         - ../src
 
   # Optional: Uncomment and add your cert/key files if needed

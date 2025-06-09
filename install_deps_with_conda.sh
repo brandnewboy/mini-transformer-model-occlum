@@ -16,6 +16,5 @@ $script_dir/python-occlum/bin/pip install torch==2.2.1 --index-url https://downl
 # $script_dir/python-occlum/bin/pip install transformers_stream_generator einops tiktoken
 $script_dir/python-occlum/bin/pip install tiktoken
 $script_dir/python-occlum/bin/pip install requests
-$script_dir/python-occlum/bin/pip install numpy==1.24.0
+$script_dir/python-occlum/bin/pip install numpy~=1.24.0
 $script_dir/python-occlum/bin/pip install blobfile
-#$script_dir/python-occlum/bin/pip install pkg name

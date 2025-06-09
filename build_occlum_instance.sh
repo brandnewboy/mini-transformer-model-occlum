@@ -16,11 +16,13 @@ if [ ! -d $python_dir ];then
     exit 1
 fi
 
-new_json="$(jq '.resource_limits.user_space_size = "1MB" |
-        .resource_limits.user_space_max_size = "640MB" |
-        .resource_limits.kernel_space_heap_size = "1MB" |
-        .resource_limits.kernel_space_heap_max_size = "256MB" |
-        .env.default += ["PYTHONHOME=/opt/python-occlum"]' Occlum.json)" && 
+new_json="$(jq '.resource_limits.user_space_size = "60GB" |
+        .resource_limits.user_space_max_size = "60GB" |
+        .resource_limits.kernel_space_heap_size = "16GB" |
+        .resource_limits.kernel_space_heap_max_size = "16GB" |
+        .resource_limits.max_num_of_threads = 500 |
+        .env.untrusted += ["HF_DATASETS_CACHE", "OMP_NUM_THREADS"] |
+        .env.default += ["PYTHONHOME=/opt/python-occlum"]' Occlum.json)" &&
 echo "${new_json}" > Occlum.json
-# 模拟模式
+# 模�~K~_模�~O
 occlum build --sgx-mode SIM
